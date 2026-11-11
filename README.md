@@ -41,7 +41,7 @@ EFI OpenCore 1.0.8 untuk **Acer Aspire A514-53** (Intel Core i3-1005G1, Ice Lake
 | Kecerahan layar (tombol F) | Berfungsi |
 | Baterai (persentase dan status charging) | Terbaca |
 | Port USB 2.0 dan USB 3 (5 Gb/s) | Berfungsi |
-| Webcam | Terdeteksi di USB, gambar belum dikonfirmasi |
+| Webcam | Berfungsi (gambar tampil di Photo Booth) |
 | Bluetooth | Berfungsi dengan TWS (EarFun Air Pro 4, audio terputar) tanpa `IntelBTPatcher`; mouse BT dan HP belum terhubung/belum diuji |
 | Boot otomatis ke Macintosh HD (default OpenCore) | Belum stabil |
 | Sleep / wake | **Tidak berfungsi** (tidak bisa bangun), sleep dimatikan lewat `pmset` |
