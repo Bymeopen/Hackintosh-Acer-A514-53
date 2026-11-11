@@ -32,7 +32,7 @@ Jangan memperbarui macOS tanpa mencadangkan folder EFI dan memperbarui OpenCore 
 Salin partisi EFI SSD macOS (`diskutil mount`, lalu `cp -R /Volumes/EFI/EFI ~/Desktop/EFI-backup`) ke flashdisk atau cloud. Folder itu berisi serial, MLB, UUID, ROM, dan sandi WiFi; jangan dipublikasikan.
 
 ## Kernel panic saat memakai Bluetooth (IntelBTPatcher)
-Gejala: Bluetooth menyala dan scan jalan, lalu menyambung ke perangkat membuat Bluetooth mati-hidup atau kernel panic berulang. Backtrace memuat `com.zxystd.IntelBTPatcher`, `IOUSBHostFamily`, dan thread `bluetoothd`.
+Gejala: setelah `IntelBTPatcher` diaktifkan, menyambung ke perangkat membuat Bluetooth mati-hidup atau kernel panic berulang. Koneksi TWS ternyata berhasil tanpa patcher (restart dan pairing ulang). Backtrace memuat `com.zxystd.IntelBTPatcher`, `IOUSBHostFamily`, dan thread `bluetoothd`.
 Penyebab: `IntelBTPatcher` 2.4.0 di macOS 15.8.2. Solusi: set `Enabled = false` pada `IntelBTPatcher.kext` di `config.plist`.
 Jika Mac panic terus sebelum sempat diperbaiki, edit config dari luar: boot flashdisk/Recovery, atau mount EFI SSD dari Windows (`diskpart`, `select volume N`, `assign letter=R`), lalu ubah `Enabled` blok `IntelBTPatcher.kext` menjadi `<false/>`. Pastikan yang di-mount EFI SSD macOS, bukan EFI flashdisk atau EFI Windows. Cadangkan `config.plist` dulu.
 

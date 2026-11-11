@@ -14,7 +14,7 @@ Dokumen ini jujur soal batas EFI ini. Tabel status di `README.md` hanya berisi h
 
 ## Belum dikonfirmasi
 - **Webcam**: terdeteksi di USB (Quanta HD User Facing), gambar di Photo Booth belum dikonfirmasi.
-- **Bluetooth**: macOS melaporkan Bluetooth menyala dan scan menemukan HP, tetapi koneksi ke HP dan TWS **gagal**. "BT5.2 Mouse" berstatus Tidak Terhubung; USB `3151:3020` yang terlihat kemungkinan receiver 2,4 GHz, bukan Bluetooth. Mengaktifkan `IntelBTPatcher` 2.4.0 menyebabkan **kernel panic berulang** (backtrace: `bluetoothd` -> `IOUSBHostFamily` -> `IntelBTPatcher`), jadi jangan diaktifkan. Opsi: coba versi kext lain (dengan cadangan EFI di flashdisk) atau dongle Bluetooth USB.
+- **Bluetooth**: TWS (EarFun Air Pro 4) berhasil terhubung dan memutar audio hanya dengan `IntelBluetoothFirmware` + `BlueToolFixup`. Sebelumnya koneksi gagal dan Bluetooth mati-hidup sendiri; setelah restart dan pairing ulang berhasil (penyebab pastinya belum dipastikan). "BT5.2 Mouse" masih Tidak Terhubung dan HP belum diuji. Kualitas/stabilitas audio jangka panjang dan mikrofon TWS belum diuji. **Jangan** mengaktifkan `IntelBTPatcher` 2.4.0: menyebabkan kernel panic berulang di macOS 15.8.2 (backtrace: `bluetoothd` -> `IOUSBHostFamily` -> `IntelBTPatcher`).
 - **Ukuran huruf / HiDPI**: layar 1920x1080 tanpa penskalaan terasa kecil. Mode HiDPI belum dipasang.
 - **Performa render video**: akselerasi VideoToolbox (H.264/HEVC) belum diuji.
 
