@@ -14,13 +14,13 @@ Dokumen ini jujur soal batas EFI ini. Tabel status di `README.md` hanya berisi h
 
 ## Belum dikonfirmasi
 - **Webcam**: terdeteksi di USB (Quanta HD User Facing), gambar di Photo Booth belum dikonfirmasi.
-- **Bluetooth**: menyala dan stabil dengan mouse; perangkat lain (headset, speaker, ponsel) belum diuji. Jika putus-putus, aktifkan `IntelBTPatcher`.
+- **Bluetooth**: macOS melaporkan Bluetooth menyala dan scan menemukan HP, tetapi koneksi ke HP dan TWS **gagal**. "BT5.2 Mouse" berstatus Tidak Terhubung; USB `3151:3020` yang terlihat kemungkinan receiver 2,4 GHz, bukan Bluetooth. Mengaktifkan `IntelBTPatcher` 2.4.0 menyebabkan **kernel panic berulang** (backtrace: `bluetoothd` -> `IOUSBHostFamily` -> `IntelBTPatcher`), jadi jangan diaktifkan. Opsi: coba versi kext lain (dengan cadangan EFI di flashdisk) atau dongle Bluetooth USB.
 - **Ukuran huruf / HiDPI**: layar 1920x1080 tanpa penskalaan terasa kecil. Mode HiDPI belum dipasang.
 - **Performa render video**: akselerasi VideoToolbox (H.264/HEVC) belum diuji.
 
 ## Catatan dari pemeriksaan `config.plist` (belum dipahami / perlu dicek)
 Hasil membaca cadangan `config.plist` (data pribadi sudah dibuang). Belum diputuskan atau diuji; dicatat supaya tidak hilang.
-- **Status kext Bluetooth tidak konsisten.** Di cadangan config, `IntelBluetoothFirmware`, `IntelBTPatcher`, dan `BlueToolFixup` tertulis `Enabled = false`, padahal Bluetooth dilaporkan berfungsi. Cek `config.plist` yang benar-benar dipakai.
+- **Status kext Bluetooth (sudah diselaraskan).** Config di laptop memakai `IntelBluetoothFirmware = true`, `BlueToolFixup = true`, `IntelBTPatcher = false`; `config.plist` di repo sekarang sama. Cadangan lama berisi ketiganya `false`.
 - **Komentar kext usang (sudah dikoreksi di `EFI/OC/config.plist` repo ini).** Di cadangan asli komentar menyebut "AX210" (kartunya AX201), "PLACEHOLDER" untuk USBToolBox/UTBMap, dan "USB Ethernet" untuk RealtekRTL8111 (sebenarnya PCIe). Hanya komentar, tidak memengaruhi fungsi; salin perbaikan ke `config.plist` di laptop jika mau.
 - **Peta USB (`UTBMap.kext`) sudah nyata, bukan placeholder.** Dicek di cadangan Drive: satu pengendali XHC, `port-count` 15 (batas 15 port terpenuhi), 9 port terdaftar: HS01, HS02 (konektor USB 3), HS03 (USB 2), HS04 dan SS03 (konektor tipe 9, Type-C), HS05 dan HS06 (internal, kemungkinan Bluetooth dan webcam), SS01 dan SS02 (USB 3). Komentar "PLACEHOLDER" di `config.plist` hanya usang. Kecocokan dengan port fisik sudah dicek lewat tangkapan layar ringkasan spesifikasi dari pencarian web (sumber sekunder, bukan dokumen resmi Acer): 2x USB 3.x Type-A (kiri), 1x USB 2.0 Type-A (kanan), 1x USB Type-C 3.2 Gen 1 (kiri). Ini cocok dengan peta: HS01+SS01 dan HS02+SS02 untuk Type-A USB 3, HS03 untuk USB 2, HS04+SS03 untuk Type-C. Yang belum dicek: apakah HS05 dan HS06 (internal) memang Bluetooth dan webcam.
 - **Urutan kext.** `VoodooInput`, `VoodooGPIO`, dan `VoodooI2CServices` dimuat setelah kext induknya, sedangkan panduan umum menaruh dependensi lebih dulu. Saat ini berjalan, tetapi rapuh.
@@ -57,3 +57,6 @@ Hasil membaca cadangan `config.plist` (data pribadi sudah dibuang). Belum diputu
 - [ ] Tabel kredit di `README.md` dicocokkan dengan isi `EFI/`.
 - [ ] Lisensi ECEnabler dan `USBToolBox.kext` (tidak ada berkas LICENSE di repo), serta OcBinaryData dan Dortania ACPI, dicek langsung di halaman GitHub-nya oleh pemilik repo.
 - [ ] Berkas `config.plist.bak*` tidak ikut (sudah diabaikan `.gitignore`).
+
+## Kondisi baterai
+- Laptop uji: sekitar 749 siklus, kapasitas maksimum sekitar 53% dari kapasitas desain (2264 dari 4266 mAh). Ini keausan hardware, bukan masalah konfigurasi.

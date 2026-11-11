@@ -42,7 +42,7 @@ EFI OpenCore 1.0.8 untuk **Acer Aspire A514-53** (Intel Core i3-1005G1, Ice Lake
 | Baterai (persentase dan status charging) | Terbaca |
 | Port USB 2.0 dan USB 3 (5 Gb/s) | Berfungsi |
 | Webcam | Terdeteksi di USB, gambar belum dikonfirmasi |
-| Bluetooth | Berfungsi dengan mouse; perangkat lain (headset, speaker, HP) belum diuji |
+| Bluetooth | **Hanya scan** (perangkat terdeteksi), koneksi ke HP/TWS belum berhasil; mouse BT belum terbukti terhubung |
 | Boot otomatis ke Macintosh HD (default OpenCore) | Belum stabil |
 | Sleep / wake | **Tidak berfungsi** (tidak bisa bangun), sleep dimatikan lewat `pmset` |
 | AirDrop, Handoff, Continuity | Tidak tersedia (butuh kartu Broadcom) |
@@ -70,7 +70,7 @@ EFI OpenCore 1.0.8 untuk **Acer Aspire A514-53** (Intel Core i3-1005G1, Ice Lake
 
 Lilu, VirtualSMC, SMCProcessor, SMCBatteryManager, WhateverGreen, AppleALC, RestrictEvents, CpuTscSync, BrightnessKeys, ECEnabler, VoodooPS2Controller (+VoodooInput, VoodooPS2Keyboard), VoodooI2C, VoodooI2CHID, VoodooGPIO, VoodooI2CServices, USBToolBox + UTBMap, RealtekRTL8111, itlwm, IntelBluetoothFirmware, BlueToolFixup.
 
-`IntelBTPatcher` ada di folder tetapi **dinonaktifkan** (diaktifkan hanya jika Bluetooth tidak stabil).
+`IntelBTPatcher` ada di folder tetapi **harus tetap dinonaktifkan**: versi 2.4.0 menyebabkan kernel panic (`bluetoothd` -> `IOUSBHostFamily` -> `IntelBTPatcher`) di macOS 15.8.2. `IntelBluetoothFirmware` dan `BlueToolFixup` aktif (`Enabled = true`).
 
 ## SSDT
 
@@ -107,7 +107,8 @@ Menu WiFi bawaan macOS akan menampilkan "Mati". Itu normal untuk itlwm; gunakan 
 ## Peringatan
 
 - Repo ini disediakan apa adanya, tanpa jaminan. Hasil bisa berbeda di perangkat lain, dan semua risiko (kehilangan data, kerusakan, pelanggaran lisensi Apple) ditanggung pengguna sendiri.
-- Jangan menjalankan update macOS tanpa mencadangkan folder EFI dan memperbarui OpenCore serta kext dulu.
+- Jangan menjalankan update macOS tanpa mencadangkan folder EFI dan memperbarui OpenCore serta kext dulu. Matikan pembaruan otomatis (lihat `TROUBLESHOOTING.md`).
+- Jangan mengaktifkan `IntelBTPatcher` (kernel panic berulang di Sequoia 15.8.2).
 - Mati paksa berulang bisa mereset BIOS (lihat bagian BIOS).
 
 ## Catatan penggunaan
