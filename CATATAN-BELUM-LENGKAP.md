@@ -3,10 +3,13 @@
 Dokumen ini jujur soal batas EFI ini. Tabel status di `README.md` hanya berisi hal terbukti; di sini semua sisanya.
 
 ## Tidak berfungsi
-- **Sleep / wake.** Laptop tidak bisa bangun setelah tidur (layar hitam, harus mati paksa). Dugaan: banyak laptop Ice Lake hanya mendukung S0ix (Modern Standby) tanpa S3; periksa `_S3` di DSDT, `pmset -g log`, `pmset -g assertions`, kelengkapan UTBMap, dan patch GPRW (wake lewat USB/GPIO trackpad I2C). Belum diuji.
-  Solusi sementara: matikan sleep sistem (catatan: `disablesleep 1` juga mematikan sleep saat penutup ditutup, baterai bisa terkuras).
-  `sudo pmset -a sleep 0 disablesleep 1 displaysleep 10`
-  Mati paksa berulang berisiko mereset BIOS (lihat `TROUBLESHOOTING.md`).
+- **Sleep / wake (diagnosa sementara, belum diperbaiki).** Sleep dimatikan lewat `pmset` (`sleep 0`, `hibernatemode 0`, `standby 0`, `powernap 0`); `womp 1`, `proximitywake 1`, `tcpkeepalive 1`. macOS mengenali dukungan sleep (`IOSleepSupported = Yes`, DeepSleep, Hibernation). Dari `pmset -g log` hanya ada 3 kejadian sleep:
+  - 10 Nov 02:27 Idle Sleep (AC) -> wake normal 02:53 (`Wake from Normal Sleep ... due to PWRB XDCI/Lid Open`), jadi tidur sungguhan (S3) dan wake lewat tombol power/lid **pernah berhasil**.
+  - 10 Nov 02:56 Idle Sleep (AC), tiga menit setelah wake tadi -> **tidak ada catatan wake**.
+  - 10 Nov 23:37 Software Sleep (baterai 86%) -> **tidak ada catatan wake**.
+  Dugaan (belum terbukti, datanya sedikit): sleep pertama pulih baik, tetapi sleep kedua yang menyusul tidak lama setelah wake gagal bangun; komponen yang belum pulih sempurna (grafis, I2C, atau USB) belum diketahui. Di config tidak ada `SSDT-GPRW` atau patch wake USB/I2C.
+  Rencana uji terkontrol (belum dijalankan): matikan sumber wake (`sudo pmset -a womp 0 proximitywake 0 tcpkeepalive 0 powernap 0`), jalankan `pmset sleepnow`, bangunkan dengan tombol power, ulangi segera untuk meniru sleep kedua, lalu baca `pmset -g log`. Jangan menguji dengan menutup lid dulu. Setelah mati paksa, cek SATA Mode BIOS masih AHCI.
+  Solusi sementara: jangan menutup lid dan jangan tidurkan manual selama sleep belum stabil; `sudo pmset -a sleep 0 displaysleep 10`. Mati paksa berulang berisiko mereset BIOS (lihat `TROUBLESHOOTING.md`).
 - **AirDrop, Handoff, Continuity.** Butuh kartu WiFi/Bluetooth Broadcom; tidak tersedia dengan kartu Intel + itlwm.
 
 ## Belum stabil
